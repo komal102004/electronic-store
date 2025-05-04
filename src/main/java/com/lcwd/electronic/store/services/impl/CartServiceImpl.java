@@ -85,6 +85,7 @@ private CartItemRepository cartItemRepository;
                     .build();
             cart.getItems().add(cartItem);
         }
+
             cart.setUser(user);
             Cart updatedCart = cartRepository.save(cart);
             return mapper.map(updatedCart, CartDto.class);
