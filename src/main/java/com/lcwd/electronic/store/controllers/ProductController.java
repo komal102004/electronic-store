@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +28,7 @@ public class ProductController {
     @Value("${category.image.path}")
     private String imagePath;
     //create
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto)
     {
@@ -41,6 +43,7 @@ public class ProductController {
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
     //delete
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{productId}")
     public ResponseEntity<ApiResponseMessage> delete(@PathVariable String productId)
     {
@@ -83,6 +86,7 @@ public class ProductController {
         return new ResponseEntity<>(pageableResponse,HttpStatus.OK);
     }
     // search all
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("search/{query}")
     public  ResponseEntity<PageableResponse<ProductDto >> searchByTitle(@PathVariable String query, @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
                                                                   @RequestParam(value = "pageSize",defaultValue = "10",required = false) int pageSize,
@@ -94,6 +98,7 @@ public class ProductController {
         return new ResponseEntity<>(pageableResponse,HttpStatus.OK);
     }
     //upload image
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/image/{productId}")
     public ResponseEntity<ImageResponse> uploadProductImage(
             @PathVariable String productId,
@@ -108,6 +113,7 @@ public class ProductController {
 
     }
     //serve image
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/image/{productId}")
     public void serverProductImage(@PathVariable String productId, HttpServletResponse response) throws IOException {
       ProductDto productDto=productService.get(productId);

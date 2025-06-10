@@ -1,5 +1,6 @@
 package com.lcwd.electronic.store.dtos;
 
+import com.lcwd.electronic.store.entities.Role;
 import com.lcwd.electronic.store.validate.ImageNameValid;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -7,6 +8,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,6 +33,8 @@ public class UserDto {
     private String gender;
 @NotBlank(message = "Write something about yourself !!")
     private String about;
+
+private List<RoleDto> roles;
 @ImageNameValid
     private String imageName;
 

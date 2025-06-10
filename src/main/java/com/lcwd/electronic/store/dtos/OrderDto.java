@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @ToString
 public class OrderDto {
@@ -21,7 +22,7 @@ public class OrderDto {
     // NON-PAID, PAID
     //enum
     //Boolean-> false=>NOT-PAID || true=>PAID
-    private String paymentStatus="NOTPAID";
+    private String payementStatus="NOTPAID";
 
     private int orderAmount;
     private String billingAddress;
@@ -34,4 +35,7 @@ public class OrderDto {
 
 
     private List<OrderItemDto> orderItems=new ArrayList<>();
+
+
+
 }

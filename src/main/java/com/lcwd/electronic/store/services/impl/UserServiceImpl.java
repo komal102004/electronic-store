@@ -2,8 +2,10 @@ package com.lcwd.electronic.store.services.impl;
 
 import com.lcwd.electronic.store.dtos.PageableResponse;
 import com.lcwd.electronic.store.dtos.UserDto;
+import com.lcwd.electronic.store.entities.Role;
 import com.lcwd.electronic.store.exceptions.ResourceNotFoundException;
 import com.lcwd.electronic.store.helper.Helper;
+import com.lcwd.electronic.store.repositiories.RoleRepository;
 import com.lcwd.electronic.store.repositiories.UserRepository;
 import com.lcwd.electronic.store.services.UserService;
 import lombok.Builder;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -39,12 +42,27 @@ public class UserServiceImpl implements UserService {
  @Value("${user.profile.image.path}")
  private  String imagePath;
  private Logger logger= LoggerFactory.getLogger(UserServiceImpl.class);
+ @Autowired
+ private RoleRepository roleRepository;
+ @Autowired
+ private PasswordEncoder passwordEncoder;
     @Override
     public UserDto createUser(UserDto userDto) {
         String userId= UUID.randomUUID().toString();
         userDto.setUserId(userId);
 
         User user=dtoToEntity(userDto);
+        //password encode
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        //get the normal role
+        Role role =new Role();
+        role.setRoleId(UUID.randomUUID().toString());
+//        role.setName("ROLE_NORMAL");
+        role.setName(userDto.getRoles().get(0).getName());
+        Role roleNormal =roleRepository.findByName(userDto.getRoles().get(0).getName()).orElse(role);
+        user.setRoles(List.of(roleNormal));
+
+
         User savedUser=userRepository.save(user);
        UserDto newDto=entityToDto(savedUser);
         return newDto;
@@ -60,6 +78,8 @@ public class UserServiceImpl implements UserService {
         user.setGender(userDto.getGender());
         user.setPassword(userDto.getPassword());
         user.setImageName(userDto.getImageName());
+        //assign normal role to user
+        //by detail jo bhi api se user banega usko ham log normal user banayenge
         //save data
         User updatedUser= userRepository.save(user);
         UserDto updatedDto=entityToDto(updatedUser);

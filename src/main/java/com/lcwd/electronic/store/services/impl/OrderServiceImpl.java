@@ -3,6 +3,7 @@ package com.lcwd.electronic.store.services.impl;
 import com.lcwd.electronic.store.dtos.CreateOrderRequest;
 import com.lcwd.electronic.store.dtos.OrderDto;
 import com.lcwd.electronic.store.dtos.PageableResponse;
+import com.lcwd.electronic.store.dtos.ProductDto;
 import com.lcwd.electronic.store.entities.*;
 import com.lcwd.electronic.store.exceptions.BadApiRequest;
 import com.lcwd.electronic.store.exceptions.ResourceNotFoundException;
@@ -102,5 +103,32 @@ orderAmount.set(orderAmount.get()+orderItem.getTotalPrice());
         Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
         Page<Order> page=orderRepository.findAll(pageable);
         return Helper.getPageableResponse(page,OrderDto.class);
+    }
+
+    @Override
+    public OrderDto update(OrderDto orderDto, String orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with given ID"));
+
+        // Update order fields from DTO
+        order.setOrderStatus(orderDto.getOrderStatus());
+        order.setPayementStatus(orderDto.getPayementStatus());
+        order.setOrderAmount(orderDto.getOrderAmount());
+        order.setBillingAddress(orderDto.getBillingAddress());
+        order.setBillingPhone(orderDto.getBillingPhone());
+        order.setBillingName(orderDto.getBillingName());
+        order.setOrderedDate(orderDto.getOrderedDate());
+        order.setDeliveredDate(orderDto.getDeliveredDate());
+
+        // If user and orderItems are updatable via DTO, update them here accordingly
+        // order.setUser(...);
+        // order.setOrderItems(...);
+
+        // Save the updated order entity
+        Order updatedOrder = orderRepository.save(order);
+
+        // Return the updated DTO
+        return modelMapper.map(updatedOrder, OrderDto.class);
+
     }
 }

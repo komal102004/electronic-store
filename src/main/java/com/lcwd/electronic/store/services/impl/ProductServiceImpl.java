@@ -9,6 +9,7 @@ import com.lcwd.electronic.store.helper.Helper;
 import com.lcwd.electronic.store.repositiories.CategoryRepository;
 import com.lcwd.electronic.store.repositiories.ProductRepository;
 import com.lcwd.electronic.store.services.ProductService;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +26,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
+@Log4j2
 @Service
 public class ProductServiceImpl implements ProductService {
     @Autowired
@@ -38,7 +39,6 @@ public class ProductServiceImpl implements ProductService {
     private CategoryRepository categoryRepository;
     @Value("${product.image.path}")
     private String imagePath;
-    private Logger logger= LoggerFactory.getLogger(ProductServiceImpl.class);
     @Override
     public ProductDto create(ProductDto productDto) {
         Product product=mapper.map(productDto,Product.class);
@@ -76,12 +76,12 @@ public class ProductServiceImpl implements ProductService {
             Path path = Paths.get(fullPath);
             if (Files.exists(path)) {
                 Files.delete(path);
-                logger.info("Image deleted successfully.");
+                log.info("Image deleted successfully.");
             } else {
-                logger.warn("Image file does not exist: {}", fullPath);
+                log.warn("Image file does not exist: {}", fullPath);
             }
         } catch (IOException e) {
-            logger.error("Error deleting image file: {}", e.getMessage());
+            log.error("Error deleting image file: {}", e.getMessage());
         }
         productRepository.delete(product);
 
