@@ -6,10 +6,12 @@ import com.lcwd.electronic.store.dtos.ApiResponseMessage;
 import com.lcwd.electronic.store.dtos.ImageResponse;
 import com.lcwd.electronic.store.dtos.PageableResponse;
 import com.lcwd.electronic.store.dtos.UserDto;
+import com.lcwd.electronic.store.entities.Providers;
 import com.lcwd.electronic.store.services.FileService;
 import com.lcwd.electronic.store.services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-
+@Log4j2
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -34,11 +36,11 @@ public class UserController {
 private FileService fileService;
 @Value("${user.profile.image.path}")
 private String imageUploadPath;
-private Logger logger= LoggerFactory.getLogger(UserController.class);
    //create
     @PostMapping
     public ResponseEntity<UserDto> createUser(@Valid  @RequestBody UserDto userDto)
     {
+        userDto.setProviders(Providers.SELF );
         UserDto userDto1=userService.createUser(userDto);
         return new ResponseEntity<>(userDto1, HttpStatus.CREATED);
     }
@@ -109,7 +111,7 @@ private Logger logger= LoggerFactory.getLogger(UserController.class);
     @GetMapping("/image/{userId}")
     public void serverUserImage(@PathVariable String userId, HttpServletResponse response) throws IOException {
         UserDto user=userService.getUserById(userId);
-        logger.info("User image name : {}",user.getImageName());
+        log.info("User image name : {}",user.getImageName());
         InputStream resource=fileService.getResource(imageUploadPath,user.getImageName());
         response.setContentType(MediaType.IMAGE_JPEG_VALUE);
         StreamUtils.copy(resource,response.getOutputStream());

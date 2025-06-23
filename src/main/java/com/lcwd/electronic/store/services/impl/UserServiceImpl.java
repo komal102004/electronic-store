@@ -1,5 +1,6 @@
 package com.lcwd.electronic.store.services.impl;
 
+import com.lcwd.electronic.store.config.AppConstants;
 import com.lcwd.electronic.store.dtos.PageableResponse;
 import com.lcwd.electronic.store.dtos.UserDto;
 import com.lcwd.electronic.store.entities.Role;
@@ -58,8 +59,8 @@ public class UserServiceImpl implements UserService {
         Role role =new Role();
         role.setRoleId(UUID.randomUUID().toString());
 //        role.setName("ROLE_NORMAL");
-        role.setName(userDto.getRoles().get(0).getName());
-        Role roleNormal =roleRepository.findByName(userDto.getRoles().get(0).getName()).orElse(role);
+        role.setName("ROLE_"+ AppConstants.ROLE_ADMIN);
+        Role roleNormal =roleRepository.findByName("ROLE_"+AppConstants.ROLE_NORMAL).orElse(role);
         user.setRoles(List.of(roleNormal));
 
 

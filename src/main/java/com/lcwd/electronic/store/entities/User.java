@@ -2,6 +2,7 @@ package com.lcwd.electronic.store.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +39,8 @@ public class User implements UserDetails {
     private List<Order> orders=new ArrayList<>();
      @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
      private List<Role> roles=new ArrayList<>();
+
+     private Providers provider;
 //important for roles
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
