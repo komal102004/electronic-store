@@ -109,4 +109,4 @@ Komal Agrahari
 Final Year B.Tech (IT)
 Babu Banarasi Das Engineering College, Lucknow
 GitHub Repo:https://github.com/komal102004/electronic-store
- komalagrahari1020@gmail.com
+Email:komalagrahari1020@gmail.com
