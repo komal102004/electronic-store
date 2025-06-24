@@ -23,6 +23,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,7 +61,21 @@ public class AuthenticationController {
     private String googleClientId;
     @Value("${app.google.default.password}")
     private String googleProviderDefaultPassword;
+@PostMapping("/relogin")
+public ResponseEntity<AuthenticationResponse> relogin(@RequestBody RefreshTokenRequest request)
+{
+  RefreshTokenDto refreshTokenDto= refreshTokenService.findByToken(request.getRefreshToken());
+  RefreshTokenDto refreshTokenDto1=refreshTokenService.verifyRefreshToken(refreshTokenDto);
+ UserDto user= refreshTokenService.getUser(refreshTokenDto1);
+ String jwtToken=jwtHelper.generateToken(modelMapper.map(user,User.class));
+ AuthenticationResponse response= AuthenticationResponse.builder()
+         .token(jwtToken)
+         .refreshToken(refreshTokenDto)
+         .user(user)
+         .build();
+ return ResponseEntity.ok(response);
 
+}
     @PostMapping("/login")   //Todo: /login
     public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request)
     {

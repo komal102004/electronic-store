@@ -1,6 +1,7 @@
 package com.lcwd.electronic.store.services;
 
 import com.lcwd.electronic.store.dtos.RefreshTokenDto;
+import com.lcwd.electronic.store.dtos.UserDto;
 import org.springframework.stereotype.Service;
 
 
@@ -13,6 +14,6 @@ public interface RefreshTokenService {
 
     //verify
     RefreshTokenDto verifyRefreshToken(RefreshTokenDto refreshTokenDto);
-
+     UserDto getUser(RefreshTokenDto dto);
 
 }

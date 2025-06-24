@@ -67,7 +67,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET,"/categories/**").permitAll()
                     .requestMatchers("/categories/**").hasRole(AppConstants.ROLE_ADMIN)
 
-                    .requestMatchers(HttpMethod.POST,"/auth/login","/auth/login-with-google").permitAll()
+                    .requestMatchers(HttpMethod.POST,"/auth/login","/auth/login-with-google","/auth/relogin").permitAll()
                     .requestMatchers("/auth/**").authenticated()
                     .anyRequest().permitAll()
 
