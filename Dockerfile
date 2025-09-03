@@ -7,7 +7,7 @@ RUN addgroup --system spring && adduser --system spring --ingroup spring
 WORKDIR /app
 
 # Copy the jar file
-COPY target/electronic-store-1.0.0-SNAPSHOT.jar app.jar
+COPY target/electronic-store-01.jar app.jar
 
 # Change ownership
 RUN chown spring:spring app.jar
